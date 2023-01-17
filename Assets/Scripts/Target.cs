@@ -5,11 +5,12 @@ using UnityEngine;
 public class Target : MonoBehaviour
 {
     private Rigidbody targetRb;
-    private float minSpeed = 12f;
-    private float maxSpeed = 16f;
+    private float minSpeed = 10f;//pour la jouabilité
+    private float maxSpeed = 14f;//pour la jouabilité
     private float maxTorque = 10f;
     private float xRange = 4f;
-    private float ySpawnPos = -6f;
+    private float ySpawnPos = -1f; //pour la jouabilité
+    private float boundLimit = -1f; //pour la jouabilité
     private GameManager gameManager;
     public int pointValue;
     public ParticleSystem explosionParticle;
@@ -26,7 +27,7 @@ public class Target : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
+        OutOfBound();
     }
 
     Vector3 RandomForce()
@@ -57,8 +58,18 @@ public class Target : MonoBehaviour
 
     private void OnCollisionEnter(Collision col)
     {
-        Destroy(gameObject);
-        if (!gameObject.CompareTag("Bad"))
+        //Pour que les bombes detruisent les autres GO mais pas elles memes !
+        if (gameObject.CompareTag("Bad") && !col.gameObject.CompareTag("Bad"))
+        {
+                Destroy(col.gameObject);
+                gameManager.UpdateScore(-10);
+        }
+    }
+     
+    // Pour definir la zone de GameOver
+    void OutOfBound()
+    {
+        if (!gameObject.CompareTag("Bad") && transform.position.y < boundLimit)
         {
             gameManager.GameOver();
         }
