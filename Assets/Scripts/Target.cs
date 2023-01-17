@@ -28,6 +28,7 @@ public class Target : MonoBehaviour
     void Update()
     {
         OutOfBound();
+        CleanZone();
     }
 
     Vector3 RandomForce()
@@ -72,6 +73,14 @@ public class Target : MonoBehaviour
         if (!gameObject.CompareTag("Bad") && transform.position.y < boundLimit)
         {
             gameManager.GameOver();
+        }
+    }
+
+    void CleanZone()
+    {
+        if (!gameManager.isGameActive)
+        {
+            Destroy(gameObject);
         }
     }
 }
